@@ -7,12 +7,15 @@ import {
 } from "firebase/auth";
 import app from "./firebase.init";
 import { useState } from "react";
+import { GithubAuthProvider } from "firebase/auth";
+
 
 const auth = getAuth(app);
 
 function App() {
   const [userData, setUserData] = useState({});
   const googleProvider = new GoogleAuthProvider();
+  const githubProvider = new GithubAuthProvider();
   const googleSignIn = () => {
     signInWithPopup(auth, googleProvider)
       .then((data) => {
@@ -25,7 +28,12 @@ function App() {
       });
   };
   const githubSignIn = () => {
-    
+    signInWithPopup(auth, githubProvider).then(data => {
+      const user = data.user
+      setUserData(user)
+    }).catch(error => {
+      console.log(error);
+    })
   }
   const signedOut = () => {
     signOut(auth)
